@@ -97,18 +97,6 @@
         .insan-konusma { color: #33aaff; } 
         .gizemli-konusma { color: #aaaaaa; } 
 
-        /* KÜÇÜK HESAP MAKİNESİ KONUMU VE BOYUTU (Sol Üst) */
-        .hesap-makinesi {
-            width: 120px; /* Daha da Küçük Genişlik */
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 1000;
-        }
-        .ekran { font-size: 1em; padding: 4px; margin-bottom: 4px; }
-        .dugmeler { gap: 3px; }
-        .dugme { padding: 6px; font-size: 0.7em; }
-
         /* TERS SAAT KONUMU */
         .saat-kutusu {
             position: fixed;
@@ -172,30 +160,7 @@
     <div class="saat-kutusu aero-kutu">
         <div id="tersSaat" class="saat">--:--:--</div>
     </div>
-
-    <div class="hesap-makinesi aero-kutu">
-        <div class="ekran" id="ekran">0</div>
-        <div class="dugmeler">
-            <button class="dugme temizle" onclick="temizle()">AC</button>
-            <button class="dugme operator" onclick="girdiIslem('/')">÷</button>
-            <button class="dugme operator" onclick="girdiIslem('*')">×</button>
-            <button class="dugme" onclick="girdiRakam(7)">7</button>
-            <button class="dugme" onclick="girdiRakam(8)">8</button>
-            <button class="dugme" onclick="girdiRakam(9)">9</button>
-            <button class="dugme operator" onclick="girdiIslem('-')">-</button>
-            <button class="dugme" onclick="girdiRakam(4)">4</button>
-            <button class="dugme" onclick="girdiRakam(5)">5</button>
-            <button class="dugme" onclick="girdiRakam(6)">6</button>
-            <button class="dugme operator" onclick="girdiIslem('+')">+</button>
-            <button class="dugme" onclick="girdiRakam(1)">1</button>
-            <button class="dugme" onclick="girdiRakam(2)">2</button>
-            <button class="dugme" onclick="girdiRakam(3)">3</button>
-            <button class="dugme esittir" onclick="hesapla()">=</button>
-            <button class="dugme" onclick="girdiRakam(0)">0</button>
-            <button class="dugme" onclick="girdiRakam('.')">.</button>
-        </div>
-    </div>
-
+    
     <div class="hikaye-kutusu" onclick="hikayeIlerle()">
         <div id="canGostergesi">HP: 20</div>
         <div id="hikayeMetin"></div>
@@ -224,49 +189,7 @@
         setInterval(guncelleTersSaat, 1000);
         guncelleTersSaat();
 
-        // *** KOMİK HESAP MAKİNESİ FONKSİYONLARI *** (Her İşlem Yanlış)
-        let mevcutDeger = '0';
-        let operator = null;
-        let ilkSayi = null;
-        let beklenenDeger = false;
-
-        function guncelleEkran() { document.getElementById('ekran').innerText = mevcutDeger; }
-        function temizle() { mevcutDeger = '0'; operator = null; ilkSayi = null; beklenenDeger = false; guncelleEkran(); }
-        function girdiRakam(rakam) {
-            if (mevcutDeger.length >= 7 && !beklenenDeger) return; 
-            if (beklenenDeger) { mevcutDeger = rakam.toString(); beklenenDeger = false; } 
-            else { mevcutDeger = mevcutDeger === '0' ? rakam.toString() : mevcutDeger + rakam; }
-            guncelleEkran();
-        }
-        function girdiIslem(islem) { ilkSayi = parseFloat(mevuger); operator = islem; beklenenDeger = true; }
-        
-        // KOMİK HESAPLAMA MANTIĞI: HER İŞLEM YANLIŞ
-        function hesapla() {
-            if (operator === null) return;
-            const ikinciSayi = parseFloat(mevcutDeger);
-            let sonuc = 0;
-
-            switch (operator) {
-                case '+':
-                    sonuc = ilkSayi + ikinciSayi + 13.37; // Her zaman 13.37 fazla
-                    break;
-                case '-':
-                    sonuc = Math.floor(Math.random() * 50) + 99; // Her zaman absürt bir 99+ sayı
-                    break;
-                case '*':
-                    sonuc = (ilkSayi * 0.5) + (ikinciSayi * 0.5); // Çarpma yerine ortalama alma
-                    break;
-                case '/':
-                    sonuc = "YANIT 4.0.4"; // Bölmeye 404
-                    break;
-            }
-
-            mevcutDeger = sonuc.toString().substring(0, 7); 
-            operator = null; ilkSayi = parseFloat(mevcutDeger); beklenenDeger = true; guncelleEkran();
-        }
-        guncelleEkran();
-
-        // *** GİZLİ HATA MESAJI FONKSİYONLARI *** (Yeni Mesajlar)
+        // *** GİZLİ HATA MESAJI FONKSİYONLARI *** (Aynı, Komik Mesajlar)
         function hataGoster() {
             const hataMesajlari = [
                 "MODÜL: 0x42 SİSTEMİNDEN YANIT ALINAMADI.",
@@ -319,18 +242,20 @@
                 savasModu = false;
                 document.getElementById('savasEkrani').innerHTML = "";
                 document.getElementById('hikayeMetin').onclick = () => location.reload();
+                // Tıklayarak ilerleme işlevini durdur
+                document.querySelector('.hikaye-kutusu').onclick = () => location.reload();
             }
         }
 
         function ilerlemeGoster() {
              document.getElementById('ilerlemeMesaj').innerHTML = 
-                 (hikayeAdim === 0 || savasModu) ? "" : "İLERLEMEK İÇİN TIKLA VEYA **ENTER/SPACE** BAS...";
+                 (hikayeAdim === 0 || savasModu) ? "" : "İLERLEMEK İÇİN **TIKLA** VEYA **ENTER/SPACE** BAS...";
         }
 
         function gosterAdim() {
             const metinAlan = document.getElementById('hikayeMetin');
             const secenekAlan = document.getElementById('secenekler');
-            secenekAlan.innerHTML = ""; // Seçenekleri varsayılan olarak temizle
+            secenekAlan.innerHTML = "";
 
             if (hikayeAdim === 0) {
                 metinAlan.innerHTML = hikayeMetinleri[0];
@@ -346,6 +271,8 @@
                 savasModu = true;
                 metinAlan.innerHTML = hikayeMetinleri[15];
                 setTimeout(savasBaslat, 1000); // 1 saniye sonra savaşı başlat
+                // Tıklayarak ilerleme işlevini durdur
+                document.querySelector('.hikaye-kutusu').onclick = null;
                 return;
             }
 
@@ -364,11 +291,14 @@
             } else if (secim === 2) {
                 document.getElementById('hikayeMetin').innerHTML = "Boşver dedin. Her şey normal görünüyor. (Tekrar dene)";
                 document.getElementById('secenekler').innerHTML = `<button class='secenek-dugme' onclick='location.reload()'>YENİDEN BAŞLAT</button>`;
+                // Tıklayarak ilerleme işlevini yeniden başlatma düğmesine yönlendir
+                document.querySelector('.hikaye-kutusu').onclick = () => location.reload();
                 return;
             }
             gosterAdim();
         }
         
+        // Tıklama ile ilerleme işlevi
         function hikayeIlerle() {
             if (hikayeAdim >= 1 && hikayeAdim < 15 && !savasModu) {
                 hikayeAdim++;
@@ -385,13 +315,13 @@
                     <div id="ruh"></div>
                 </div>
                 <div class="ok-seti">
-                    <button class="ok-dugme" onclick="kac(1)">⬅ SOL (Mavi Ok)</button>
-                    <button class="ok-dugme" onclick="kac(2)">ORTA (Sarı Ok)</button>
-                    <button class="ok-dugme" onclick="kac(3)">SAĞ ➡ (Kırmızı Ok)</button>
+                    <button class="ok-dugme" onclick="kac(1)">⬅ SOL (MAVİ)</button>
+                    <button class="ok-dugme" onclick="kac(2)">ORTA (SARI)</button>
+                    <button class="ok-dugme" onclick="kac(3)">SAĞ ➡ (KIRMIZI)</button>
                 </div>
             `;
             // Yeni ok setini başlat
-            setTimeout(oklariFirlat, 1000);
+            setTimeout(oklariFirlat, 1500);
         }
 
         let dogruYon = 0; // 1:Sol, 2:Orta, 3:Sağ
@@ -399,13 +329,14 @@
         function oklariFirlat() {
             if (!savasModu || can <= 0) return;
             
+            // 1/3 ihtimalle her yön, Asgore okları rastgele fırlatır
             dogruYon = Math.floor(Math.random() * 3) + 1;
             let yonMetni = "";
             if (dogruYon === 1) yonMetni = "SOL";
             else if (dogruYon === 2) yonMetni = "ORTA";
             else if (dogruYon === 3) yonMetni = "SAĞ";
             
-            document.getElementById('savasMetin').innerText = `ASGORE OKLARI FIRLATIYOR! (${yonMetni} YÖNÜNDEN KAÇIN!)`;
+            document.getElementById('savasMetin').innerText = `ASGORE OKLARI FIRLATIYOR! (${yonMetni} YÖNÜNE KAÇ!)`;
         }
 
         function kac(secilenYon) {
@@ -415,7 +346,7 @@
                 document.getElementById('savasMetin').innerText = "BAŞARILI! (0 Hasar)";
             } else {
                 can -= 5; // Yanlış kaçış: 5 Hasar
-                document.getElementById('savasMetin').innerText = `HASAR ALDIN! (-5 HP)`;
+                document.getElementById('savasMetin').innerText = `VURULDU! (-5 HP)`;
             }
 
             guncelleCan();
