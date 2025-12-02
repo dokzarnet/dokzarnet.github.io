@@ -3,10 +3,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hesaplama Modülü</title> <style>
+    <title>Hesaplama Modülü</title>
+    <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #101010 0%, #3a0000 100%); /* Koyu Kırmızıdan Siyaha Geçişli Arkaplan */
+            background: linear-gradient(135deg, #101010 0%, #3a0000 100%); 
             color: #f0f0f0;
             display: flex;
             flex-direction: column;
@@ -18,38 +19,36 @@
 
         /* AERO CAM EFEKTİ İÇİN TEMEL STİL */
         .aero-kutu {
-            background-color: rgba(40, 40, 40, 0.6); /* Yarı şeffaf koyu arkaplan */
-            backdrop-filter: blur(8px); /* Bulanıklık efekti (Aero) */
-            border: 1px solid rgba(255, 0, 0, 0.5); /* Yarı şeffaf kırmızı çerçeve */
+            background-color: rgba(40, 40, 40, 0.6); 
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 0, 0, 0.5); 
             border-radius: 12px;
             padding: 20px;
             margin-bottom: 30px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); /* Gölge */
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); 
         }
 
         /* TERS SAAT STİLİ */
         .saat-kutusu {
-            /* .aero-kutu kullanacak */
             text-align: center;
         }
 
         .saat {
             font-size: 3.5em;
             font-weight: bold;
-            color: #ff3333; /* Parlak Kırmızı Saat Rengi */
-            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7); /* Parlama */
+            color: #ff3333; 
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7); 
             font-family: 'Courier New', monospace;
         }
 
         /* HESAP MAKİNESİ STİLİ */
         .hesap-makinesi {
             width: 320px;
-            /* .aero-kutu kullanacak */
         }
 
         .ekran {
             background-color: rgba(0, 0, 0, 0.7);
-            color: #ff3333; /* Kırmızı Ekran Metni */
+            color: #ff3333; 
             font-size: 2.2em;
             padding: 10px;
             margin-bottom: 15px;
@@ -82,7 +81,7 @@
         }
 
         .operator {
-            background-color: #ff0000; /* Parlak Kırmızı */
+            background-color: #ff0000; 
         }
 
         .operator:hover {
@@ -90,7 +89,7 @@
         }
 
         .esittir {
-            background-color: #00ff00; /* Yeşil (Sonuç için farklı renk) */
+            background-color: #00ff00; 
             grid-column: span 2;
             color: #000;
         }
@@ -100,7 +99,7 @@
         }
 
         .temizle {
-            background-color: #990000; /* Koyu Kırmızı/Bordo */
+            background-color: #990000; 
         }
 
         .temizle:hover {
@@ -138,29 +137,21 @@
     </div>
 
     <script>
-        // Ters Saat Fonksiyonu
+        // Ters Saat Fonksiyonu (Aynı Kaldı)
         function guncelleTersSaat() {
-            // Mevcut zamanı al (Konya, Türkiye'de olduğu varsayılmıştır, bu yüzden sunucudaki saat kullanılır)
             const simdi = new Date();
-            
-            // Gerçek saati 12 saat ileri/geri alıyoruz (Ters Saat Mantığı: 24 saat formatında tersini gösterir)
-            // (12 saat * 60 dakika * 60 saniye * 1000 milisaniye)
             const tersZaman = new Date(simdi.getTime() + (12 * 60 * 60 * 1000)); 
-
             const saat = tersZaman.getHours();
             const dakika = tersZaman.getMinutes();
             const saniye = tersZaman.getSeconds();
-
-            // Rakamların başına sıfır ekleme (09:05:01 gibi)
             const formatla = (deger) => deger < 10 ? '0' + deger : deger;
 
             document.getElementById('tersSaat').innerText = 
                 `${formatla(saat)}:${formatla(dakika)}:${formatla(saniye)}`;
         }
 
-        // Saati her saniye güncelle
         setInterval(guncelleTersSaat, 1000);
-        guncelleTersSaat(); // Sayfa açıldığında hemen başlasın
+        guncelleTersSaat();
 
         // Komik Hesap Makinesi Fonksiyonları
         let mevcutDeger = '0';
@@ -181,7 +172,7 @@
         }
 
         function girdiRakam(rakam) {
-            if (mevcutDeger.length >= 12 && !beklenenDeger) return; // Maksimum 12 hane sınırı
+            if (mevcutDeger.length >= 12 && !beklenenDeger) return; 
 
             if (beklenenDeger) {
                 mevcutDeger = rakam.toString();
@@ -204,15 +195,17 @@
             const ikinciSayi = parseFloat(mevcutDeger);
             let sonuc = 0;
 
-            // ************* KOMİK HESAPLAMA MANTIKLARI *************
-            if (ilkSayi === 5 && ikinciSayi === 5 && operator === '+') {
-                sonuc = 11.5; 
-            } else if (ilkSayi === 10 && ikinciSayi === 2 && operator === '*') {
-                sonuc = 51; 
-            } else if (ilkSayi === 9 && ikinciSayi === 10 && operator === '-') {
-                sonuc = 999; 
-            } else if (ilkSayi === 1 && ikinciSayi === 0 && operator === '/') {
-                sonuc = "HATA (BİLGİNİ SORGULA)"; // 1/0 hatası yerine komik mesaj
+            // ************* YENİ KOMİK HESAPLAMA MANTIKLARI *************
+            if (ilkSayi === 1 && ikinciSayi === 1 && operator === '+') {
+                sonuc = 3; 
+            } else if (ilkSayi === 10 && ikinciSayi === 2 && operator === '/') {
+                sonuc = 2.5; 
+            } else if (ilkSayi === 9 && ikinciSayi === 9 && operator === '*') {
+                sonuc = 99; 
+            } else if (ilkSayi === 50 && ikinciSayi === 50 && operator === '-') {
+                sonuc = 42; 
+            } else if (ilkSayi === 0 && operator === '/') {
+                sonuc = "HATA (BİLGİNİ SORGULA)"; 
             }
             // ************* NORMAL HESAPLAMA *************
             else {
@@ -232,7 +225,7 @@
                 }
             }
 
-            mevcutDeger = sonuc.toString().substring(0, 12); // Sonucu sınırlıyoruz
+            mevcutDeger = sonuc.toString().substring(0, 12); 
             operator = null;
             ilkSayi = parseFloat(mevcutDeger);
             beklenenDeger = true;
