@@ -3,9 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SİSTEM: YERALTI PROTOKOLÜ</title> 
+    <title>SİSTEM: KONTROL PANELİ</title> 
     <style>
-        /* GENEL TEMA VE HİKAYE EKRANI STİLLERİ */
+        /* GENEL TEMA VE GÖRÜNÜM STİLLERİ */
         body {
             font-family: 'Courier New', monospace;
             background: linear-gradient(135deg, #000000 0%, #1a0000 100%);
@@ -42,61 +42,6 @@
             transition: all 0.3s;
         }
 
-        /* HİKAYE ANA KUTUSU */
-        .hikaye-kutusu {
-            width: 90%;
-            max-width: 700px;
-            min-height: 400px;
-            background-color: #000;
-            border: 4px solid #ff3333;
-            padding: 20px;
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            cursor: pointer; /* Tıklanabilir olması için */
-        }
-
-        /* HİKAYE METİN ALANI */
-        #hikayeMetin {
-            font-size: 1.5em;
-            color: #fff;
-            white-space: pre-wrap;
-            line-height: 1.6;
-        }
-
-        /* CAN GÖSTERGESİ */
-        #canGostergesi {
-            font-size: 1em;
-            color: #00ff00;
-            margin-top: -10px;
-            margin-bottom: 5px;
-        }
-
-        /* SEÇENEKLER VE İLERLEME TUŞU MESAJI */
-        #secenekler, #ilerlemeMesaj {
-            font-size: 1.2em;
-            color: #ff3333;
-            margin-top: 10px;
-        }
-
-        .secenek-dugme {
-            background-color: #ff3333;
-            color: #000;
-            border: none;
-            padding: 8px 15px;
-            margin-right: 8px;
-            font-family: 'Courier New', monospace;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        /* UNDERTAIL RENKLERİ */
-        .asgore-konusma { color: #f7a83d; } 
-        .insan-konusma { color: #33aaff; } 
-        .gizemli-konusma { color: #aaaaaa; } 
-
         /* TERS SAAT KONUMU */
         .saat-kutusu {
             position: fixed;
@@ -104,53 +49,36 @@
             right: 20px;
             z-index: 1000;
         }
-        .saat { font-size: 1.5em; }
-
-        /* SAVAŞ KUTUSU (Ruh ve Oklar) */
-        .savas-alani {
-            width: 300px;
-            height: 200px;
-            border: 2px solid #fff;
-            margin: 20px auto;
-            position: relative;
-            background-color: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-        #ruh {
-            width: 15px;
-            height: 15px;
-            background-color: red;
-            position: absolute;
-            bottom: 50%;
-            left: 50%;
-            transform: translate(-50%, 50%);
-            border-radius: 2px;
-            box-shadow: 0 0 5px red;
-        }
-        .ok-dugme {
-            background-color: #333;
-            color: #fff;
-            border: 2px solid #ff3333;
-            padding: 10px;
-            margin: 5px;
-            cursor: pointer;
-            transition: background-color 0.1s;
-        }
-        .ok-dugme:hover {
-            background-color: #ff3333;
-        }
-        .ok-seti {
-            margin-top: 15px;
-        }
-        #savasMetin {
+        .saat { 
+            font-size: 1.5em; 
             color: #ff3333;
-            font-size: 1.2em;
-            margin-bottom: 10px;
+            text-shadow: 0 0 8px rgba(255, 0, 0, 0.7); 
         }
-        
+
+        /* GİZLİ HATA MESAJI STİLİ */
+        #gizliAlan {
+            background-color: rgba(255, 0, 0, 0.1);
+            padding: 50px 100px;
+            margin-top: 150px; /* Ortada durması için üstten boşluk */
+            cursor: pointer;
+            text-align: center;
+            border: 1px dashed rgba(255, 0, 0, 0.5);
+            max-width: 500px;
+        }
+
+        #gizliAlan p {
+            font-size: 1.2em;
+            color: #aaaaaa;
+        }
+
+        #hataMesaji {
+            color: #ff3333;
+            font-size: 1.8em;
+            font-weight: bold;
+            display: none;
+            margin-top: 10px;
+            text-shadow: 0 0 5px rgba(255, 0, 0, 0.7);
+        }
     </style>
 </head>
 <body>
@@ -161,21 +89,13 @@
         <div id="tersSaat" class="saat">--:--:--</div>
     </div>
     
-    <div class="hikaye-kutusu" onclick="hikayeIlerle()">
-        <div id="canGostergesi">HP: 20</div>
-        <div id="hikayeMetin"></div>
-        <div id="savasEkrani"></div>
-        <div id="ilerlemeMesaj"></div>
-        <div id="secenekler"></div>
-    </div>
-    
     <div id="gizliAlan" onclick="hataGoster()">
         <p>GİZLİ SİSTEM AÇIĞI (Tıklama Gerektirir)</p>
         <div id="hataMesaji"></div>
     </div>
 
     <script>
-        // *** TERS SAAT FONKSİYONLARI *** (Aynı)
+        // *** TERS SAAT FONKSİYONLARI ***
         function guncelleTersSaat() {
             const simdi = new Date();
             const tersZaman = new Date(simdi.getTime() + (12 * 60 * 60 * 1000)); 
@@ -189,7 +109,7 @@
         setInterval(guncelleTersSaat, 1000);
         guncelleTersSaat();
 
-        // *** GİZLİ HATA MESAJI FONKSİYONLARI *** (Aynı, Komik Mesajlar)
+        // *** GİZLİ HATA MESAJI FONKSİYONLARI ***
         function hataGoster() {
             const hataMesajlari = [
                 "MODÜL: 0x42 SİSTEMİNDEN YANIT ALINAMADI.",
@@ -199,178 +119,18 @@
                 "KRİTİK HATA: 1 MB RAM BOŞLUĞU TESPİT EDİLDİ."
             ];
             const hataDiv = document.getElementById('hataMesaji');
+            const paragraf = document.getElementById('gizliAlan').querySelector('p');
+
             if (hataDiv.style.display === 'block') {
                 hataDiv.style.display = 'none';
-                document.getElementById('gizliAlan').querySelector('p').innerText = "GİZLİ SİSTEM AÇIĞI (Tıklama Gerektirir)";
+                paragraf.innerText = "GİZLİ SİSTEM AÇIĞI (Tıklama Gerektirir)";
             } else {
                 const rastgeleMesaj = hataMesajlari[Math.floor(Math.random() * hataMesajlari.length)];
                 hataDiv.innerText = rastgeleMesaj;
                 hataDiv.style.display = 'block';
-                document.getElementById('gizliAlan').querySelector('p').innerText = "GİZLİ İÇERİK AKTİF EDİLDİ";
+                paragraf.innerText = "GİZLİ İÇERİK AKTİF EDİLDİ";
             }
         }
-
-        // *** UNDERTAILE SİMÜLASYON FONKSİYONLARI ***
-
-        let can = 20; // 20 HP
-        let hikayeAdim = 0;
-        let savasModu = false;
-        
-        const hikayeMetinleri = [
-            "Dal buldun?", // Adım 0: Başlangıç (Seçim)
-            "Dalı alıp fırlattın.", // Adım 1: Dal alındı
-            "Bir çukur buldun.", // Adım 2
-            "İpe ayağın takıldı.", // Adım 3
-            "Düştün.", // Adım 4
-            "<span class='gizemli-konusma'>...</span>", // Adım 5
-            "Kalkmaya çalıştın.", // Adım 6
-            "Gözlerini açamıyorsun.", // Adım 7
-            "<span class='gizemli-konusma'>Biri geliyor.</span>", // Adım 8
-            "<span class='asgore-konusma'>...dum de dum</span>", // Adım 9
-            "Kıpırdamaya çalıştın.", // Adım 10
-            "<span class='asgore-konusma'>o seste neydi öyle?</span>", // Adım 11
-            "<span class='insan-konusma'>insan.</span>", // Adım 12
-            "<span class='asgore-konusma'>seninle tanışmak güzeldi.</span>", // Adım 13
-            "<span class='asgore-konusma'>Görüşürüz.</span>", // Adım 14
-            "— **SAVAŞ BAŞLADI!** —", // Adım 15: Savaş başlangıcı
-        ];
-
-        function guncelleCan() {
-            document.getElementById('canGostergesi').innerText = `HP: ${can}`;
-            if (can <= 0) {
-                document.getElementById('hikayeMetin').innerHTML = "GAME OVER. Yeniden Başlatmak İçin Tıkla.";
-                savasModu = false;
-                document.getElementById('savasEkrani').innerHTML = "";
-                document.getElementById('hikayeMetin').onclick = () => location.reload();
-                // Tıklayarak ilerleme işlevini durdur
-                document.querySelector('.hikaye-kutusu').onclick = () => location.reload();
-            }
-        }
-
-        function ilerlemeGoster() {
-             document.getElementById('ilerlemeMesaj').innerHTML = 
-                 (hikayeAdim === 0 || savasModu) ? "" : "İLERLEMEK İÇİN **TIKLA** VEYA **ENTER/SPACE** BAS...";
-        }
-
-        function gosterAdim() {
-            const metinAlan = document.getElementById('hikayeMetin');
-            const secenekAlan = document.getElementById('secenekler');
-            secenekAlan.innerHTML = "";
-
-            if (hikayeAdim === 0) {
-                metinAlan.innerHTML = hikayeMetinleri[0];
-                secenekAlan.innerHTML = 
-                    `<button class='secenek-dugme' onclick='secimYap(1)'>1. AL</button>` +
-                    `<button class='secenek-dugme' onclick='secimYap(2)'>2. BOŞVER</button>`;
-                document.getElementById('ilerlemeMesaj').innerText = "";
-                return;
-            }
-
-            // Savaş Başladı
-            if (hikayeAdim === 15) {
-                savasModu = true;
-                metinAlan.innerHTML = hikayeMetinleri[15];
-                setTimeout(savasBaslat, 1000); // 1 saniye sonra savaşı başlat
-                // Tıklayarak ilerleme işlevini durdur
-                document.querySelector('.hikaye-kutusu').onclick = null;
-                return;
-            }
-
-            // Tüm Hikaye Adımları
-            if (hikayeAdim > 0 && hikayeAdim < 15) {
-                metinAlan.innerHTML = hikayeMetinleri[hikayeAdim];
-                ilerlemeGoster();
-            }
-        }
-
-        function secimYap(secim) {
-            if (hikayeAdim !== 0) return;
-
-            if (secim === 1) {
-                hikayeAdim = 1;
-            } else if (secim === 2) {
-                document.getElementById('hikayeMetin').innerHTML = "Boşver dedin. Her şey normal görünüyor. (Tekrar dene)";
-                document.getElementById('secenekler').innerHTML = `<button class='secenek-dugme' onclick='location.reload()'>YENİDEN BAŞLAT</button>`;
-                // Tıklayarak ilerleme işlevini yeniden başlatma düğmesine yönlendir
-                document.querySelector('.hikaye-kutusu').onclick = () => location.reload();
-                return;
-            }
-            gosterAdim();
-        }
-        
-        // Tıklama ile ilerleme işlevi
-        function hikayeIlerle() {
-            if (hikayeAdim >= 1 && hikayeAdim < 15 && !savasModu) {
-                hikayeAdim++;
-                gosterAdim();
-            }
-        }
-        
-        // Asıl Undertale Savaş Mekanikleri
-        function savasBaslat() {
-            const savasEkrani = document.getElementById('savasEkrani');
-            savasEkrani.innerHTML = `
-                <div id="savasMetin">ASGORE OKLARI FIRLATIYOR! HANGİ YÖNE KAÇACAKSIN?</div>
-                <div class="savas-alani">
-                    <div id="ruh"></div>
-                </div>
-                <div class="ok-seti">
-                    <button class="ok-dugme" onclick="kac(1)">⬅ SOL (MAVİ)</button>
-                    <button class="ok-dugme" onclick="kac(2)">ORTA (SARI)</button>
-                    <button class="ok-dugme" onclick="kac(3)">SAĞ ➡ (KIRMIZI)</button>
-                </div>
-            `;
-            // Yeni ok setini başlat
-            setTimeout(oklariFirlat, 1500);
-        }
-
-        let dogruYon = 0; // 1:Sol, 2:Orta, 3:Sağ
-
-        function oklariFirlat() {
-            if (!savasModu || can <= 0) return;
-            
-            // 1/3 ihtimalle her yön, Asgore okları rastgele fırlatır
-            dogruYon = Math.floor(Math.random() * 3) + 1;
-            let yonMetni = "";
-            if (dogruYon === 1) yonMetni = "SOL";
-            else if (dogruYon === 2) yonMetni = "ORTA";
-            else if (dogruYon === 3) yonMetni = "SAĞ";
-            
-            document.getElementById('savasMetin').innerText = `ASGORE OKLARI FIRLATIYOR! (${yonMetni} YÖNÜNE KAÇ!)`;
-        }
-
-        function kac(secilenYon) {
-            if (!savasModu || can <= 0) return;
-            
-            if (secilenYon === dogruYon) {
-                document.getElementById('savasMetin').innerText = "BAŞARILI! (0 Hasar)";
-            } else {
-                can -= 5; // Yanlış kaçış: 5 Hasar
-                document.getElementById('savasMetin').innerText = `VURULDU! (-5 HP)`;
-            }
-
-            guncelleCan();
-            
-            if (can > 0) {
-                setTimeout(oklariFirlat, 1500); // 1.5 saniye sonra yeni oku fırlat
-            }
-        }
-
-        // Space/Enter Tuşuna Basınca İlerleme (Tuş ilerlemesi de aktif)
-        document.addEventListener('keydown', function(event) {
-            if (event.key === ' ' || event.key === 'Enter') {
-                if (hikayeAdim >= 1 && hikayeAdim < 15 && !savasModu) {
-                    hikayeIlerle();
-                    event.preventDefault(); // Sayfanın aşağı kaymasını engelle
-                }
-            }
-        });
-
-
-        // Başlangıç
-        gosterAdim();
-        guncelleCan();
-        
     </script>
 </body>
 </html>
