@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hesaplama Modülü</title>
+    <title>Kontrol Paneli [Alpha]</title> 
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -12,9 +12,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-top: 50px;
+            padding: 20px;
             min-height: 100vh;
             margin: 0;
+            position: relative; /* Sabit öğeler için */
         }
 
         /* AERO CAM EFEKTİ İÇİN TEMEL STİL */
@@ -23,95 +24,115 @@
             backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 0, 0, 0.5); 
             border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 30px;
+            padding: 15px;
+            margin-bottom: 25px;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); 
+            transition: all 0.3s;
+        }
+        
+        /* TERS SAAT VE KOMİK BUTONLAR İÇİN ANA KONTROL BÖLÜMÜ */
+        .kontrol-merkezi {
+            display: flex;
+            gap: 50px;
+            margin-bottom: 40px;
         }
 
         /* TERS SAAT STİLİ */
-        .saat-kutusu {
-            text-align: center;
-        }
-
         .saat {
-            font-size: 3.5em;
+            font-size: 3em;
             font-weight: bold;
             color: #ff3333; 
             text-shadow: 0 0 10px rgba(255, 0, 0, 0.7); 
             font-family: 'Courier New', monospace;
         }
 
-        /* HESAP MAKİNESİ STİLİ */
+        /* KOMİK BUTONLARIN STİLİ */
+        .komik-butonlar {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .komik-dugme {
+            background-color: #555;
+            color: #fff;
+            border: 1px solid #ff3333;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background-color 0.1s;
+        }
+        .komik-dugme:hover {
+            background-color: #ff3333;
+        }
+
+
+        /* KÜÇÜK HESAP MAKİNESİ KONUMU VE BOYUTU */
         .hesap-makinesi {
-            width: 320px;
+            width: 150px; /* Aşırı Küçük Genişlik */
+            position: fixed; /* Ekranın köşesine sabitleme */
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
         }
 
         .ekran {
             background-color: rgba(0, 0, 0, 0.7);
             color: #ff3333; 
-            font-size: 2.2em;
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            text-align: right;
-            border: 1px solid #ff3333;
-            box-shadow: inset 0 0 5px rgba(255, 0, 0, 0.5);
+            font-size: 1.2em; /* Küçük Font */
+            padding: 5px;
+            margin-bottom: 5px;
         }
 
         .dugmeler {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+            gap: 5px; /* Küçük Boşluklar */
         }
 
         .dugme {
-            background-color: rgba(60, 60, 60, 0.8);
-            color: #f0f0f0;
-            border: none;
-            padding: 18px;
-            font-size: 1.3em;
+            padding: 8px; /* Küçük Padding */
+            font-size: 0.8em; /* Küçük Font */
+        }
+
+        /* GİZLİ HATA MESAJI STİLİ */
+        #gizliAlan {
+            background-color: rgba(255, 0, 0, 0.1);
+            padding: 50px;
+            margin-top: 50px;
             cursor: pointer;
-            border-radius: 8px;
-            transition: background-color 0.1s, transform 0.1s;
+            text-align: center;
+            border: 1px dashed rgba(255, 0, 0, 0.5);
         }
 
-        .dugme:hover {
-            background-color: rgba(80, 80, 80, 0.9);
-            transform: scale(1.05);
-        }
-
-        .operator {
-            background-color: #ff0000; 
-        }
-
-        .operator:hover {
-            background-color: #cc0000;
-        }
-
-        .esittir {
-            background-color: #00ff00; 
-            grid-column: span 2;
-            color: #000;
-        }
-
-        .esittir:hover {
-            background-color: #00cc00;
-        }
-
-        .temizle {
-            background-color: #990000; 
-        }
-
-        .temizle:hover {
-            background-color: #660000;
+        #hataMesaji {
+            color: #ff3333;
+            font-size: 1.5em;
+            font-weight: bold;
+            display: none; /* Başlangıçta gizli */
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
 
-    <div class="saat-kutusu aero-kutu">
-        <div id="tersSaat" class="saat">--:--:--</div>
+    <div class="kontrol-merkezi">
+        <div class="saat-kutusu aero-kutu">
+            <div id="tersSaat" class="saat">--:--:--</div>
+        </div>
+
+        <div class="komik-butonlar aero-kutu">
+            <button class="komik-dugme" onclick="ekraniDondur()">EKRANI DONDUR [Kilit 42-A]</button>
+            <button class="komik-dugme" onclick="rastgeleVeriGoster()">RASTGELE VERİ GÖSTER</button>
+        </div>
     </div>
+    
+    <div id="gizliAlan" onclick="hataGoster()">
+        <p>Gizli Alan (Tıklama Gerektirir)</p>
+        <div id="hataMesaji"></div>
+    </div>
+
 
     <div class="hesap-makinesi aero-kutu">
         <div class="ekran" id="ekran">0</div>
@@ -137,7 +158,7 @@
     </div>
 
     <script>
-        // Ters Saat Fonksiyonu (Aynı Kaldı)
+        // Ters Saat Fonksiyonu (Değişmedi)
         function guncelleTersSaat() {
             const simdi = new Date();
             const tersZaman = new Date(simdi.getTime() + (12 * 60 * 60 * 1000)); 
@@ -149,11 +170,10 @@
             document.getElementById('tersSaat').innerText = 
                 `${formatla(saat)}:${formatla(dakika)}:${formatla(saniye)}`;
         }
-
         setInterval(guncelleTersSaat, 1000);
         guncelleTersSaat();
 
-        // Komik Hesap Makinesi Fonksiyonları
+        // Komik Hesap Makinesi Fonksiyonları (Komik Mantık Korundu)
         let mevcutDeger = '0';
         let operator = null;
         let ilkSayi = null;
@@ -172,7 +192,7 @@
         }
 
         function girdiRakam(rakam) {
-            if (mevcutDeger.length >= 12 && !beklenenDeger) return; 
+            if (mevcutDeger.length >= 10 && !beklenenDeger) return; 
 
             if (beklenenDeger) {
                 mevcutDeger = rakam.toString();
@@ -195,7 +215,7 @@
             const ikinciSayi = parseFloat(mevcutDeger);
             let sonuc = 0;
 
-            // ************* YENİ KOMİK HESAPLAMA MANTIKLARI *************
+            // ************* KOMİK HESAPLAMA MANTIKLARI *************
             if (ilkSayi === 1 && ikinciSayi === 1 && operator === '+') {
                 sonuc = 3; 
             } else if (ilkSayi === 10 && ikinciSayi === 2 && operator === '/') {
@@ -205,7 +225,7 @@
             } else if (ilkSayi === 50 && ikinciSayi === 50 && operator === '-') {
                 sonuc = 42; 
             } else if (ilkSayi === 0 && operator === '/') {
-                sonuc = "HATA (BİLGİNİ SORGULA)"; 
+                sonuc = "HATA"; // Sınırlı küçük ekrana sığması için kısa mesaj
             }
             // ************* NORMAL HESAPLAMA *************
             else {
@@ -220,12 +240,12 @@
                         sonuc = ilkSayi * ikinciSayi;
                         break;
                     case '/':
-                        sonuc = ikinciSayi === 0 ? "HATA (BÖLEMEZSİN)" : ilkSayi / ikinciSayi;
+                        sonuc = ikinciSayi === 0 ? "HATA" : ilkSayi / ikinciSayi;
                         break;
                 }
             }
 
-            mevcutDeger = sonuc.toString().substring(0, 12); 
+            mevcutDeger = sonuc.toString().substring(0, 10); 
             operator = null;
             ilkSayi = parseFloat(mevcutDeger);
             beklenenDeger = true;
@@ -233,6 +253,58 @@
         }
 
         guncelleEkran();
+        
+        // ************* YENİ KOMİK FONKSİYONLAR *************
+
+        // 1. Ekran Dondurucu Buton
+        function ekraniDondur() {
+            const body = document.body;
+            
+            // Eğer body'de "donmus" sınıfı varsa kaldır, yoksa ekle.
+            if (body.classList.contains('donmus')) {
+                body.classList.remove('donmus');
+                alert("Sistem Çözüldü. İşlem Devam Ediyor.");
+            } else {
+                body.classList.add('donmus');
+                alert("SİSTEM GİRİŞ-ÇIKIŞ DONDURULDU. Yetki Level 9.");
+            }
+            // NOT: CSS'te .donmus'a hiçbir stil eklemediğimiz için aslında görsel olarak hiçbir şey değişmez. Komiklik buradan gelir.
+        }
+
+        // 2. Rastgele Veri Göster Butonu
+        function rastgeleVeriGoster() {
+            const veriler = [
+                "OKUL AĞINDA GİZLİ KEDİ FİLTRESİ AKTİF EDİLDİ.",
+                "VERİ AKTARIMI %42. Başarısız. Sebebi: Matematik Öğretmeniniz.",
+                "SUNUCU DURUMU: DÜŞÜK PİL. Lütfen bir elma verin.",
+                "EKRAN KİLİTLENDİ. Şifre: 1+1=3",
+                "BAĞLANTI KOPTU. Bağlanılıyor... (Lütfen beklemeyin.)"
+            ];
+            const rastgeleMesaj = veriler[Math.floor(Math.random() * veriler.length)];
+            alert(rastgeleMesaj);
+        }
+
+        // 3. Gizli Hata Mesajı
+        function hataGoster() {
+            const hataMesajlari = [
+                "404: CİDDİYET BULUNAMADI.",
+                "HATA: Sınıfın En Havalı Kişisi Bulundu. Sensin.",
+                "GİZLİ HATA: Sunucuya Simit Fırlatıldı.",
+                "MEB FİLTRESİ BAŞARISIZ OLDU. Lütfen yeniden deneyin (ama denemeyin)."
+            ];
+            const hataDiv = document.getElementById('hataMesaji');
+            
+            // Eğer görünür durumdaysa gizle, değilse rastgele mesajla göster.
+            if (hataDiv.style.display === 'block') {
+                hataDiv.style.display = 'none';
+                document.getElementById('gizliAlan').querySelector('p').innerText = "Gizli Alan (Tıklama Gerektirir)";
+            } else {
+                const rastgeleMesaj = hataMesajlari[Math.floor(Math.random() * hataMesajlari.length)];
+                hataDiv.innerText = rastgeleMesaj;
+                hataDiv.style.display = 'block';
+                document.getElementById('gizliAlan').querySelector('p').innerText = "GİZLİ İÇERİK AKTİF EDİLDİ";
+            }
+        }
     </script>
 </body>
 </html>
