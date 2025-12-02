@@ -3,22 +3,23 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kontrol Paneli [Alpha]</title> 
+    <title>SİSTEM: DOKZAR YERALTI</title> 
     <style>
+        /* GENEL TEMA VE HİKAYE EKRANI STİLLERİ */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #101010 0%, #3a0000 100%); 
-            color: #f0f0f0;
+            font-family: 'Courier New', monospace; /* Undertale tarzı font */
+            background: linear-gradient(135deg, #000000 0%, #1a0000 100%); /* Siyah ve Koyu Kırmızı Arkaplan */
+            color: #ffffff;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 20px;
             min-height: 100vh;
             margin: 0;
-            position: relative; /* Sabit öğeler için */
+            position: relative;
         }
 
-        /* AERO CAM EFEKTİ İÇİN TEMEL STİL */
+        /* AERO CAM EFEKTİ */
         .aero-kutu {
             background-color: rgba(40, 40, 40, 0.6); 
             backdrop-filter: blur(8px);
@@ -27,80 +28,101 @@
             padding: 15px;
             margin-bottom: 25px;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); 
-            transition: all 0.3s;
+        }
+
+        /* HİKAYE ANA KUTUSU */
+        .hikaye-kutusu {
+            width: 90%;
+            max-width: 700px;
+            height: 400px; /* Sabit yükseklik */
+            background-color: #000;
+            border: 4px solid #ff3333;
+            padding: 20px;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* HİKAYE METİN ALANI */
+        #hikayeMetin {
+            font-size: 1.5em;
+            color: #fff;
+            white-space: pre-wrap; /* Boşlukları korur */
+            line-height: 1.6;
+        }
+
+        /* SEÇENEKLER VE İLERLEME TUŞU MESAJI */
+        #secenekler, #ilerlemeMesaj {
+            font-size: 1.2em;
+            color: #ff3333;
+            margin-top: 20px;
+        }
+
+        .secenek-dugme {
+            background-color: #ff3333;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            margin-right: 10px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.1s;
+        }
+
+        .secenek-dugme:hover {
+            background-color: #fff;
+            color: #ff3333;
         }
         
-        /* TERS SAAT VE KOMİK BUTONLAR İÇİN ANA KONTROL BÖLÜMÜ */
+        /* ASGORE KONUŞMA RENGİ */
+        .asgore-konusma {
+            color: #f7a83d; /* Turuncu tonu */
+        }
+        .insan-konusma {
+            color: #33aaff; /* Mavi tonu */
+        }
+
+        /* KÖŞEDEKİ YARDIMCI ÖĞELER */
         .kontrol-merkezi {
             display: flex;
             gap: 50px;
             margin-bottom: 40px;
         }
-
-        /* TERS SAAT STİLİ */
-        .saat {
-            font-size: 3em;
-            font-weight: bold;
+        .saat { /* Ters Saat Stili */
+            font-size: 2em; 
             color: #ff3333; 
-            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7); 
+            text-shadow: 0 0 8px rgba(255, 0, 0, 0.7); 
             font-family: 'Courier New', monospace;
         }
-
-        /* KOMİK BUTONLARIN STİLİ */
-        .komik-butonlar {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .komik-dugme {
-            background-color: #555;
-            color: #fff;
-            border: 1px solid #ff3333;
-            padding: 10px 20px;
-            font-size: 1em;
-            cursor: pointer;
-            border-radius: 6px;
-            transition: background-color 0.1s;
-        }
-        .komik-dugme:hover {
-            background-color: #ff3333;
-        }
-
-
+        
         /* KÜÇÜK HESAP MAKİNESİ KONUMU VE BOYUTU */
         .hesap-makinesi {
-            width: 150px; /* Aşırı Küçük Genişlik */
-            position: fixed; /* Ekranın köşesine sabitleme */
+            width: 150px; 
+            position: fixed; 
             bottom: 20px;
             right: 20px;
             z-index: 1000;
         }
-
-        .ekran {
-            background-color: rgba(0, 0, 0, 0.7);
-            color: #ff3333; 
-            font-size: 1.2em; /* Küçük Font */
-            padding: 5px;
-            margin-bottom: 5px;
-        }
-
-        .dugmeler {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 5px; /* Küçük Boşluklar */
-        }
-
-        .dugme {
-            padding: 8px; /* Küçük Padding */
-            font-size: 0.8em; /* Küçük Font */
-        }
+        /* Hesap Makinesi Stilleri (Önceki koddan) */
+        .ekran { background-color: rgba(0, 0, 0, 0.7); color: #ff3333; font-size: 1.2em; padding: 5px; margin-bottom: 5px; border-radius: 8px; text-align: right; border: 1px solid #ff3333; box-shadow: inset 0 0 5px rgba(255, 0, 0, 0.5); }
+        .dugmeler { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+        .dugme { background-color: rgba(60, 60, 60, 0.8); color: #f0f0f0; border: none; padding: 8px; font-size: 0.8em; cursor: pointer; border-radius: 5px; transition: background-color 0.1s, transform 0.1s; }
+        .dugme:hover { background-color: rgba(80, 80, 80, 0.9); transform: scale(1.05); }
+        .operator { background-color: #ff0000; }
+        .operator:hover { background-color: #cc0000; }
+        .esittir { background-color: #00ff00; grid-column: span 2; color: #000; }
+        .esittir:hover { background-color: #00cc00; }
+        .temizle { background-color: #990000; }
+        .temizle:hover { background-color: #660000; }
 
         /* GİZLİ HATA MESAJI STİLİ */
         #gizliAlan {
             background-color: rgba(255, 0, 0, 0.1);
-            padding: 50px;
-            margin-top: 50px;
+            padding: 20px 50px;
+            margin-top: 20px;
             cursor: pointer;
             text-align: center;
             border: 1px dashed rgba(255, 0, 0, 0.5);
@@ -110,8 +132,8 @@
             color: #ff3333;
             font-size: 1.5em;
             font-weight: bold;
-            display: none; /* Başlangıçta gizli */
-            margin-top: 20px;
+            display: none;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -121,18 +143,18 @@
         <div class="saat-kutusu aero-kutu">
             <div id="tersSaat" class="saat">--:--:--</div>
         </div>
+    </div>
 
-        <div class="komik-butonlar aero-kutu">
-            <button class="komik-dugme" onclick="ekraniDondur()">EKRANI DONDUR [Kilit 42-A]</button>
-            <button class="komik-dugme" onclick="rastgeleVeriGoster()">RASTGELE VERİ GÖSTER</button>
-        </div>
+    <div class="hikaye-kutusu">
+        <div id="hikayeMetin"></div>
+        <div id="ilerlemeMesaj"></div>
+        <div id="secenekler"></div>
     </div>
     
     <div id="gizliAlan" onclick="hataGoster()">
-        <p>Gizli Alan (Tıklama Gerektirir)</p>
+        <p>GİZLİ SİSTEM AÇIĞI (Tıklama Gerektirir)</p>
         <div id="hataMesaji"></div>
     </div>
-
 
     <div class="hesap-makinesi aero-kutu">
         <div class="ekran" id="ekran">0</div>
@@ -158,7 +180,7 @@
     </div>
 
     <script>
-        // Ters Saat Fonksiyonu (Değişmedi)
+        // *** TERS SAAT FONKSİYONLARI ***
         function guncelleTersSaat() {
             const simdi = new Date();
             const tersZaman = new Date(simdi.getTime() + (12 * 60 * 60 * 1000)); 
@@ -166,138 +188,62 @@
             const dakika = tersZaman.getMinutes();
             const saniye = tersZaman.getSeconds();
             const formatla = (deger) => deger < 10 ? '0' + deger : deger;
-
             document.getElementById('tersSaat').innerText = 
                 `${formatla(saat)}:${formatla(dakika)}:${formatla(saniye)}`;
         }
         setInterval(guncelleTersSaat, 1000);
         guncelleTersSaat();
 
-        // Komik Hesap Makinesi Fonksiyonları (Komik Mantık Korundu)
+        // *** KOMİK HESAP MAKİNESİ FONKSİYONLARI ***
         let mevcutDeger = '0';
         let operator = null;
         let ilkSayi = null;
         let beklenenDeger = false;
 
-        function guncelleEkran() {
-            document.getElementById('ekran').innerText = mevcutDeger;
-        }
-
-        function temizle() {
-            mevcutDeger = '0';
-            operator = null;
-            ilkSayi = null;
-            beklenenDeger = false;
-            guncelleEkran();
-        }
-
+        function guncelleEkran() { document.getElementById('ekran').innerText = mevcutDeger; }
+        function temizle() { mevcutDeger = '0'; operator = null; ilkSayi = null; beklenenDeger = false; guncelleEkran(); }
         function girdiRakam(rakam) {
             if (mevcutDeger.length >= 10 && !beklenenDeger) return; 
-
-            if (beklenenDeger) {
-                mevcutDeger = rakam.toString();
-                beklenenDeger = false;
-            } else {
-                mevcutDeger = mevcutDeger === '0' ? rakam.toString() : mevcutDeger + rakam;
-            }
+            if (beklenenDeger) { mevcutDeger = rakam.toString(); beklenenDeger = false; } 
+            else { mevcutDeger = mevcutDeger === '0' ? rakam.toString() : mevcutDeger + rakam; }
             guncelleEkran();
         }
-
-        function girdiIslem(islem) {
-            ilkSayi = parseFloat(mevcutDeger);
-            operator = islem;
-            beklenenDeger = true;
-        }
-
+        function girdiIslem(islem) { ilkSayi = parseFloat(mevcutDeger); operator = islem; beklenenDeger = true; }
         function hesapla() {
             if (operator === null) return;
-
             const ikinciSayi = parseFloat(mevcutDeger);
             let sonuc = 0;
-
-            // ************* KOMİK HESAPLAMA MANTIKLARI *************
-            if (ilkSayi === 1 && ikinciSayi === 1 && operator === '+') {
-                sonuc = 3; 
-            } else if (ilkSayi === 10 && ikinciSayi === 2 && operator === '/') {
-                sonuc = 2.5; 
-            } else if (ilkSayi === 9 && ikinciSayi === 9 && operator === '*') {
-                sonuc = 99; 
-            } else if (ilkSayi === 50 && ikinciSayi === 50 && operator === '-') {
-                sonuc = 42; 
-            } else if (ilkSayi === 0 && operator === '/') {
-                sonuc = "HATA"; // Sınırlı küçük ekrana sığması için kısa mesaj
-            }
-            // ************* NORMAL HESAPLAMA *************
+            // KOMİK HESAPLAMA MANTIKLARI
+            if (ilkSayi === 1 && ikinciSayi === 1 && operator === '+') { sonuc = 3; } 
+            else if (ilkSayi === 10 && ikinciSayi === 2 && operator === '/') { sonuc = 2.5; } 
+            else if (ilkSayi === 9 && ikinciSayi === 9 && operator === '*') { sonuc = 99; } 
+            else if (ilkSayi === 50 && ikinciSayi === 50 && operator === '-') { sonuc = 42; }
+            // NORMAL HESAPLAMA
             else {
                 switch (operator) {
-                    case '+':
-                        sonuc = ilkSayi + ikinciSayi;
-                        break;
-                    case '-':
-                        sonuc = ilkSayi - ikinciSayi;
-                        break;
-                    case '*':
-                        sonuc = ilkSayi * ikinciSayi;
-                        break;
-                    case '/':
-                        sonuc = ikinciSayi === 0 ? "HATA" : ilkSayi / ikinciSayi;
-                        break;
+                    case '+': sonuc = ilkSayi + ikinciSayi; break;
+                    case '-': sonuc = ilkSayi - ikinciSayi; break;
+                    case '*': sonuc = ilkSayi * ikinciSayi; break;
+                    case '/': sonuc = ikinciSayi === 0 ? "HATA" : ilkSayi / ikinciSayi; break;
                 }
             }
-
             mevcutDeger = sonuc.toString().substring(0, 10); 
-            operator = null;
-            ilkSayi = parseFloat(mevcutDeger);
-            beklenenDeger = true;
-            guncelleEkran();
+            operator = null; ilkSayi = parseFloat(mevcutDeger); beklenenDeger = true; guncelleEkran();
         }
-
         guncelleEkran();
-        
-        // ************* YENİ KOMİK FONKSİYONLAR *************
 
-        // 1. Ekran Dondurucu Buton
-        function ekraniDondur() {
-            const body = document.body;
-            
-            // Eğer body'de "donmus" sınıfı varsa kaldır, yoksa ekle.
-            if (body.classList.contains('donmus')) {
-                body.classList.remove('donmus');
-                alert("Sistem Çözüldü. İşlem Devam Ediyor.");
-            } else {
-                body.classList.add('donmus');
-                alert("SİSTEM GİRİŞ-ÇIKIŞ DONDURULDU. Yetki Level 9.");
-            }
-            // NOT: CSS'te .donmus'a hiçbir stil eklemediğimiz için aslında görsel olarak hiçbir şey değişmez. Komiklik buradan gelir.
-        }
-
-        // 2. Rastgele Veri Göster Butonu
-        function rastgeleVeriGoster() {
-            const veriler = [
-                "OKUL AĞINDA GİZLİ KEDİ FİLTRESİ AKTİF EDİLDİ.",
-                "VERİ AKTARIMI %42. Başarısız. Sebebi: Matematik Öğretmeniniz.",
-                "SUNUCU DURUMU: DÜŞÜK PİL. Lütfen bir elma verin.",
-                "EKRAN KİLİTLENDİ. Şifre: 1+1=3",
-                "BAĞLANTI KOPTU. Bağlanılıyor... (Lütfen beklemeyin.)"
-            ];
-            const rastgeleMesaj = veriler[Math.floor(Math.random() * veriler.length)];
-            alert(rastgeleMesaj);
-        }
-
-        // 3. Gizli Hata Mesajı
+        // *** GİZLİ HATA MESAJI FONKSİYONLARI ***
         function hataGoster() {
             const hataMesajlari = [
                 "404: CİDDİYET BULUNAMADI.",
-                "HATA: Sınıfın En Havalı Kişisi Bulundu. Sensin.",
-                "GİZLİ HATA: Sunucuya Simit Fırlatıldı.",
-                "MEB FİLTRESİ BAŞARISIZ OLDU. Lütfen yeniden deneyin (ama denemeyin)."
+                "BAŞARISIZ: DOĞRULANAMAYAN 5. BOYUT VERİ TRANSFERİ.",
+                "MEKANİZMA ÇÖKTÜ. SEBEP: YANLIŞ YAZILMIŞ 3 SATIR KOD.",
+                "KRİTİK HATA: 1 MB RAM BOŞLUĞU TESPİT EDİLDİ."
             ];
             const hataDiv = document.getElementById('hataMesaji');
-            
-            // Eğer görünür durumdaysa gizle, değilse rastgele mesajla göster.
             if (hataDiv.style.display === 'block') {
                 hataDiv.style.display = 'none';
-                document.getElementById('gizliAlan').querySelector('p').innerText = "Gizli Alan (Tıklama Gerektirir)";
+                document.getElementById('gizliAlan').querySelector('p').innerText = "GİZLİ SİSTEM AÇIĞI (Tıklama Gerektirir)";
             } else {
                 const rastgeleMesaj = hataMesajlari[Math.floor(Math.random() * hataMesajlari.length)];
                 hataDiv.innerText = rastgeleMesaj;
@@ -305,6 +251,95 @@
                 document.getElementById('gizliAlan').querySelector('p').innerText = "GİZLİ İÇERİK AKTİF EDİLDİ";
             }
         }
+
+        // *** UNDERTAILE HİKAYE SİMÜLASYONU FONKSİYONLARI ***
+
+        let hikayeAdim = 0;
+        let dallarAlindi = false;
+        
+        const hikayeMetinleri = [
+            "Dal buldun?", // Adım 0: Başlangıç
+            "Dalı alıp fırlattın.", // Adım 1: Dal alındı
+            "Bir çukur buldun.", // Adım 2
+            "İpe ayağın takıldı.", // Adım 3
+            "Düştün.", // Adım 4
+            "...", // Adım 5
+            "Kalkmaya çalıştın.", // Adım 6
+            "Gözlerini açamıyorsun.", // Adım 7
+            "<span class='asgore-konusma'>...dum de dum</span>", // Adım 8
+            "Kıpırdamaya çalıştın.", // Adım 9
+            "<span class='asgore-konusma'>o seste neydi öyle?</span>", // Adım 10
+            "<span class='insan-konusma'>insan.</span>", // Adım 11
+            "<span class='asgore-konusma'>seninle tanışmak güzeldi.</span>", // Adım 12
+            "<span class='asgore-konusma'>Görüşürüz.</span>", // Adım 13
+            "<br>— **SAVAŞ BAŞLADI!** —", // Adım 14: Savaş başlangıcı
+        ];
+
+        function ilerlemeGoster() {
+             document.getElementById('ilerlemeMesaj').innerHTML = 
+                 hikayeAdim === 0 ? "" : "İLERLEMEK İÇİN **ENTER** VEYA **SPACE** TUŞUNA BASIN...";
+        }
+
+        function gosterAdim() {
+            const metinAlan = document.getElementById('hikayeMetin');
+            const secenekAlan = document.getElementById('secenekler');
+            
+            // Adım 0: Dal Seçimi
+            if (hikayeAdim === 0) {
+                metinAlan.innerHTML = hikayeMetinleri[0];
+                secenekAlan.innerHTML = 
+                    `<button class='secenek-dugme' onclick='secimYap(1)'>1. AL</button>` +
+                    `<button class='secenek-dugme' onclick='secimYap(2)'>2. BOŞVER</button>`;
+                document.getElementById('ilerlemeMesaj').innerText = "";
+                return;
+            }
+
+            // Tüm Hikaye Adımları (Tekrar Seçim Olmayacaksa)
+            if (hikayeAdim > 0 && hikayeAdim <= 14) {
+                metinAlan.innerHTML = hikayeMetinleri[hikayeAdim];
+                secenekAlan.innerHTML = ""; // Seçenekleri kaldır
+                ilerlemeGoster();
+            }
+
+            // Savaş Müziği Başlangıcı
+            if (hikayeAdim === 14) {
+                metinAlan.innerHTML += `<br> <span style='color:yellow;'>[MÜZİK BAŞLANGICI: ASGORE THEME]</span>`;
+                document.getElementById('ilerlemeMesaj').innerText = "GÖREV TAMAMLANDI. ÇIKIŞ YAPILIYOR...";
+                // Buraya JS ile Asgore müziğini çalma kodu gelebilir (Eğer telifsiz bir yol bulunursa)
+            }
+        }
+
+        function secimYap(secim) {
+            if (hikayeAdim !== 0) return; // Sadece ilk adımda seçim yap
+
+            if (secim === 1) {
+                dallarAlindi = true;
+                hikayeAdim = 1; // Dal alındı -> 1. adıma geç
+            } else if (secim === 2) {
+                // Boşver seçimi -> hiçbir şey olmasın, hikaye dursun
+                document.getElementById('hikayeMetin').innerHTML = "Boşver dedin. Her şey normal görünüyor. (Tekrar dene)";
+                document.getElementById('secenekler').innerHTML = `<button class='secenek-dugme' onclick='location.reload()'>YENİDEN BAŞLAT</button>`;
+                document.getElementById('ilerlemeMesaj').innerText = "";
+                return;
+            }
+            gosterAdim();
+        }
+
+        // Space/Enter Tuşuna Basınca İlerleme
+        document.addEventListener('keydown', function(event) {
+            if (event.key === ' ' || event.key === 'Enter') {
+                if (hikayeAdim >= 1 && hikayeAdim < 14) {
+                    hikayeAdim++;
+                    gosterAdim();
+                } else if (hikayeAdim === 14) {
+                    alert("Savaş başladı! (Sistem sonlandı.)");
+                }
+            }
+        });
+
+        // Başlangıç
+        gosterAdim();
+        
     </script>
 </body>
 </html>
